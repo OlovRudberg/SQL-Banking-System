@@ -1,4 +1,4 @@
--- Task 2, Use SQL DDL to implement the data model 
+-- Implement the banking data model 
 -- Create first parent table
 create table customer(
 CUST_ID varchar2(11) not null,
