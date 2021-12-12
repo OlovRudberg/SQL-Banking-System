@@ -1,3 +1,4 @@
+-- Task 2, Use SQL DDL to implement the data model 
 -- Create first parent table
 create table customer(
 CUST_ID varchar2(11) not null,
@@ -91,9 +92,10 @@ add constraint transfer_cust_id_fk foreign key(CUST_ID) references customer(CUST
 add constraint transfer_from_acc_id_fk foreign key(FROM_ACC_ID) references account(ACC_ID)
 add constraint transfer_to_acc_id_fk foreign key(TO_ACC_ID) references account(ACC_ID);
 
--- Create a trigger that starts before insert or
--- update of the column passwd in the customer table. The trigger
--- verifies password length to be exactly 6 characters.
+
+-- Create a trigger called biufer_customer that starts before insert or
+-- update of the column passwd in the customer table. The trigger verifies 
+-- that the password is exactly six characters long.
 
 create or replace trigger biufer_customer
 before insert or update  -- Use "before or update"
@@ -108,7 +110,7 @@ end;
 
 
 -- Create a procedure called do_new_cutomer. The procedure is used
--- to add new rows to the customer table (i.e. add new customers). 
+-- to add new rows to the customer table. 
 
 create or replace procedure do_new_customer(
 p_cust_id in varchar2,  -- State all parameters to use, (should match columns in original table)
@@ -122,21 +124,21 @@ begin    -- Then insert these parameters into each respective column
 end;
 
 
--- Create a sequence called pk_seq. Sequence is used to create primary key
--- values for the following table's primary key columns:
---•   Transfer
---•   Deposition
---•   Withdrawal
---•   Account_owner
---•   Interest_change
+-- Create a sequence to use for primary key
+-- values for the following tables:
+--•	Transfer
+--•	Deposition
+--•	Withdrawal
+--•	Account_owner
+--•	Interest_change
 
 create sequence pk_seq
 start with 1
 increment by 1
 
 
--- Create a function named log_in. This should return 0(zero) if the login
--- failed, or 1(one) if the login was successful. 
+-- Create a function named log_in. This should return (zero) if the login
+-- failed, or (one) if the login was successful. 
 
 create or replace function log_in(
 p_name in varchar2,   -- State parameters to use
@@ -158,8 +160,9 @@ end if;
 end;
 
 
--- Create a function called get_balance. This returns the current
--- balance for the account whose account number. 
+
+-- Create a function called get_balance. This should return the current
+-- balance for the account whose account number (acc_id) is sent to the function. 
 
 create or replace function get_balance(
 p_acc_id in number)  -- We only need to create 1 numerical parameter 
@@ -175,7 +178,8 @@ begin
 end;
 
 
--- Create a function called get_authority. This function returns
+-- Create a function called get_authority. This function takes two
+-- parameters:  cust_id and acc_id, and returns
 -- (one), if the customer has the right to make withdrawals from the account,
 -- or (zero), if the customer doesn't have any authority to the account.
 
@@ -212,8 +216,9 @@ begin
 end;
 
 
--- Create a trigger called bifer_withdrawal. The trigger ensures 
--- that you cannot withdraw more money than there is available in the account.
+-- Create a trigger called bifer_withdrawal. The trigger ensures
+-- that you cannot withdraw more money than there is available in the
+-- account.
 
 create or replace trigger bifer_withdrawal
 before insert 
@@ -230,7 +235,7 @@ end;
 
 
 -- Create a trigger called aifer_withdrawal. The trigger ensures
--- that the balance is correct after withdrawal on an account. 
+-- that the balance is correct after withdrawal on an account.
 
 create or replace trigger aifer_withdrawal
 after insert on withdrawal
@@ -244,7 +249,7 @@ begin
     where ACC_ID  = :new.ACC_ID;
   end if;
 end;
- 
+
 
 -- Create an additional trigger.
 -- The trigger ensures that you cannot take out more money than there is available
@@ -267,8 +272,7 @@ begin
 end;
 
 
--- Now it is time to create the last trigger. The trigger
--- It ensures that the balance is correct on the accounts
+-- This trigger ensures that the balance is correct on the accounts
 -- after the transaction is completed. 
 
 create or replace trigger aifer_transfer
@@ -290,7 +294,6 @@ end;
 -- Create a procedure called do_deposition. The procedure creates a row
 -- in the table deposition. After the transaction has committed, a message 
 -- containing the balance of the account after the deposit is printed out.
-
 create or replace procedure do_deposition(
 p_dep_id in varchar2,
 p_cust_id in varchar2,  -- State all parameters to use 
@@ -306,8 +309,8 @@ end;
 
 
 -- Create a procedure called do_withdrawal. The procedure creates a row
--- in the table withdrawal and raises an error message when 
--- the customer doesn't have any authority to the account.
+-- in the table withdrawal and raises error when the customer doesn't
+-- have any authority to the account.
 
 create or replace procedure do_withdrawal(
 p_wit_id in varchar2,
@@ -328,8 +331,8 @@ end;
 
 
 -- Create a procedure called do_transfer. The procedure creates a row in
--- the table transfer and raises an error message when the customer doesn't
--- have any authority to the account from which money is withdrawn. 
+-- the table transfer and raises error when the customer doesn't have any authority
+-- to the account from which money is withdrawn.
 
 create or replace procedure do_transfer(
 p_tra_id in number,
@@ -348,3 +351,5 @@ as begin
   dbms_output.put_line('The current balance of FROM_ACC_ID is: '|| get_balance(p_from_acc_id)||' And current balance of TO_ACC_ID is: '|| get_balance(p_to_acc_id));  
  end if;
 end;
+
+
