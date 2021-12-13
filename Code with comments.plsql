@@ -352,4 +352,3 @@ as begin
  end if;
 end;
 
-*.sql linguist-language=SQL
