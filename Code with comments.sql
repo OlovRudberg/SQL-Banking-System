@@ -352,5 +352,4 @@ as begin
  end if;
 end;
 
-vim: syntax=sql
-
+*.sql linguist-language=SQL
